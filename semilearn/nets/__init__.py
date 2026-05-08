@@ -7,3 +7,5 @@ from .vit import vit_base_patch16_224, vit_small_patch16_224, vit_small_patch2_3
 from .bert import bert_base_cased, bert_base_uncased, bert_base_cased_multihead, bert_base_uncased_multihead
 from .wave2vecv2 import wave2vecv2_base
 from .hubert import hubert_base
+from .resnet import resnet18
+from .cbc import CBCNet

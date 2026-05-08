@@ -272,6 +272,7 @@ def main(args):
     if os.path.exists(save_path) and not args.overwrite:
         raise Exception("already existing model: {}".format(save_path))
     if args.resume:
+    # if False:
         if args.load_path is None:
             raise Exception("Resume of training requires --load_path in the args")
         if (
