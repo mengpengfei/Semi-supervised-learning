@@ -2,11 +2,21 @@
 <project version="4">
   <component name="PublishConfigData" autoUpload="Always" serverName="root@192.168.0.13:22123 password" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
+      <paths name="0.13">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/Semi-supervised-learning" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="root@192.168.0.13:22123 password">
         <serverdata>
           <mappings>
             <mapping deploy="/data2/code/Semi-supervised-learning" local="$PROJECT_DIR$" />
           </mappings>
+          <excludedPaths>
+            <excludedPath path="/data2/code/Semi-supervised-learning/data" />
+          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>

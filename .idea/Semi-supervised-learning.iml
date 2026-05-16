@@ -3,7 +3,7 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Remote 3.10 (sftp://root@192.168.0.13:22123/opt/conda/bin/python)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote 3.10 (sftp://root@192.168.0.13:22123/opt/conda/bin/python3)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
