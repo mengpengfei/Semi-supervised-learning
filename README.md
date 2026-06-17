@@ -1,5 +1,5 @@
 <div id="top"></div>
-<!--
+<!-- nohup python -u train.py --c config/usb_cv/softmatch/softmatch_cbcnet1.yaml 2>&1 > logs/yidun2.log &
 *** Thanks for checking out the Best-README-Template. If you have a suggestion
 *** that would make this better, please fork the repo and create a pull request
 *** or simply open an issue with the tag "enhancement".

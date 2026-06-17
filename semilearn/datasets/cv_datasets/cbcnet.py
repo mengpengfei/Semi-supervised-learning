@@ -20,6 +20,12 @@ def get_cbcnet(args, alg, name, num_labels, num_classes, data_dir='./data', incl
     crop_ratio = args.crop_ratio
 
     transform_weak = transforms.Compose([
+        transforms.ColorJitter(brightness=[0.5,1.2]),
+        transforms.ColorJitter(contrast=[0.7, 1.3]),
+        transforms.ColorJitter(saturation=[0.8, 1.2]),
+        transforms.RandomAffine(degrees=2, translate=(0, 0.2), scale=(0.9, 1), shear=(6, 9), fill=(245,245,244)),
+        transforms.RandomAutocontrast(p=0.5),
+        transforms.RandomGrayscale(p=0.7),
         transforms.Resize((int(math.floor(img_size / crop_ratio)), int(math.floor(img_size / crop_ratio)))),
         transforms.RandomCrop((img_size, img_size)),
         transforms.RandomHorizontalFlip(),
