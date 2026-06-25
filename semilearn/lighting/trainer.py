@@ -63,9 +63,9 @@ class Trainer:
 
             # validate
             result = self.evaluate(eval_loader)
-
-            # save model
-            self.algorithm.save_model('latest_model.pth', self.save_path)
+            if epoch%2==0:
+                # save model
+                self.algorithm.save_model(f'{epoch}_model.pth', self.save_path)
 
             # best
             if result['acc'] > self.algorithm.best_eval_acc:

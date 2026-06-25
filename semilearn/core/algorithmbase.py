@@ -234,10 +234,19 @@ class AlgorithmBase:
                 continue
             
             # send var to cuda
+            # if isinstance(var, dict):
+            #     var = {k: v.cuda(self.gpu) for k, v in var.items()}
+            # else:
+            #     var = var.cuda(self.gpu)
+            # send var to cuda
             if isinstance(var, dict):
-                var = {k: v.cuda(self.gpu) for k, v in var.items()}
-            else:
+                var = {k: v.cuda(self.gpu) if isinstance(v, torch.Tensor) else torch.tensor(v).cuda(self.gpu) for k, v in var.items()}
+            elif isinstance(var, torch.Tensor):
                 var = var.cuda(self.gpu)
+            else:
+                # Handle numpy arrays/scalars and other types
+                var = torch.tensor(var).cuda(self.gpu)
+
             input_dict[arg] = var
         return input_dict
     
@@ -358,7 +367,8 @@ class AlgorithmBase:
         y_pred = np.array(y_pred)
         y_logits = np.concatenate(y_logits)
         top1 = accuracy_score(y_true, y_pred)
-        top5 = top_k_accuracy_score(y_true, y_probs, k=5)
+        # top5 = top_k_accuracy_score(y_true, y_probs, k=5)
+        top5 = 0
         balanced_top1 = balanced_accuracy_score(y_true, y_pred)
         precision = precision_score(y_true, y_pred, average='macro')
         recall = recall_score(y_true, y_pred, average='macro')

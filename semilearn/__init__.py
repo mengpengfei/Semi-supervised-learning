@@ -6,4 +6,5 @@ from .algorithms import get_algorithm
 from .datasets import split_ssl_data
 from .datasets.cv_datasets.datasetbase import BasicDataset
 from .lighting import Trainer, get_config
+from .datasets.cv_datasets.cbcnet import get_cbcnet
 
