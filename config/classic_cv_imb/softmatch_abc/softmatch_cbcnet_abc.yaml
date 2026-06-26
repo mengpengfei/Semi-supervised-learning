@@ -1,13 +1,13 @@
 algorithm: softmatch
 save_dir: ./saved_models/softmatch_abc/
-save_name: softmatch_cbcnet_abc_100_0
+save_name: softmatch_cbcnet_abc_100_0_adamW_cosine
 resume: False
-load_path: ./saved_models/softmatch_abc/softmatch_cbcnet_abc_100_0/latest_model.pth
+load_path: ./saved_models/softmatch_abc/softmatch_cbcnet_abc_100_0_adamW_cosine/latest_model.pth
 overwrite: True
 use_tensorboard: True
 use_wandb: False
-epoch: 200
-num_train_iter: 581400
+epoch: 100
+num_train_iter: 290700
 num_log_iter: 100
 num_eval_iter: 2907
 batch_size: 64
@@ -22,7 +22,7 @@ hard_label: True
 crop_ratio: 0.95
 img_size: 32
 optim: AdamW
-lr: 0.0001
+lr: 0.001
 momentum: 0.9
 weight_decay: 0.0005
 layer_decay: 0.5

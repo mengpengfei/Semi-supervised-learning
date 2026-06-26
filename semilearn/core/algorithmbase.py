@@ -543,6 +543,7 @@ class ImbAlgorithmBase(AlgorithmBase):
             return super().set_optimizer() 
         else:
             self.print_fn("Create optimizer and scheduler")
-            optimizer = get_optimizer(self.model, self.args.optim, self.args.lr, self.args.momentum, self.args.weight_decay, self.args.layer_decay, bn_wd_skip=False)
-            scheduler = None
-            return optimizer, scheduler
+            #optimizer = get_optimizer(self.model, self.args.optim, self.args.lr, self.args.momentum, self.args.weight_decay, self.args.layer_decay, bn_wd_skip=False)
+            #scheduler = None
+            #return optimizer, scheduler
+            return super().set_optimizer()
