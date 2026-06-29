@@ -307,6 +307,22 @@ class AlgorithmBase:
             
             self.call_hook("before_train_epoch")
 
+            # 定义调度策略
+            # schedule = torch.profiler.schedule(
+            #     wait=5,      # 前5个Step不分析
+            #     warmup=2,    # 接着2个Step预热，结果会被丢弃[reference:12]
+            #     active=3,    # 预热后，分析3个Step
+            #     repeat=1     # 整个周期只重复1次[reference:13]
+            # )
+            #
+            # with torch.profiler.profile(
+            #         activities=[torch.profiler.ProfilerActivity.CPU, torch.profiler.ProfilerActivity.CUDA],
+            #         schedule=schedule,
+            #         on_trace_ready=torch.profiler.tensorboard_trace_handler('./log/profile_logs'),
+            #         record_shapes=True,      # 记录操作符的输入形状[reference:14]
+            #         profile_memory=True,     # 记录内存的分配与释放[reference:15]
+            #         with_stack=True          # 记录操作的源码位置[reference:16]
+            # ) as prof:
             for data_lb, data_ulb in zip(self.loader_dict['train_lb'],
                                          self.loader_dict['train_ulb']):
                 # prevent the training iterations exceed args.num_train_iter
@@ -317,6 +333,7 @@ class AlgorithmBase:
                 self.out_dict, self.log_dict = self.train_step(**self.process_batch(**data_lb, **data_ulb))
                 self.call_hook("after_train_step")
                 self.it += 1
+                # prof.step()
             
             self.call_hook("after_train_epoch")
 

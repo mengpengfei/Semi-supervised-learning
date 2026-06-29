@@ -1,7 +1,7 @@
 algorithm: softmatch
 save_dir: ./saved_models/softmatch_abc/
 save_name: softmatch_cbcnet_abc_100_0_adamW_cosine
-resume: False
+resume: True
 load_path: ./saved_models/softmatch_abc/softmatch_cbcnet_abc_100_0_adamW_cosine/latest_model.pth
 overwrite: True
 use_tensorboard: True
