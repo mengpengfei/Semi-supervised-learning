@@ -190,7 +190,10 @@ class CBCNet(nn.Module):
                     output=self.cbcnet_head(x9)
             result_dict = {'logits':output.permute(1,0,2)[:,-1,:], 'feat':x9}
             return result_dict
-            # return output.permute(1,0,2)
+            # preds = output.log_softmax(2)
+            # preds=torch.argmax(preds,dim=2, keepdim=True)
+            # preds = preds.transpose( 1, 0 ).contiguous().view(-1)
+            # return preds
         else:
             if config.check_points:
                 x9 = cp.checkpoint(self.features, x, use_reentrant=False)
@@ -200,7 +203,10 @@ class CBCNet(nn.Module):
                 output=self.cbcnet_head(x9) #w,b,cnum
             result_dict = {'logits':output.permute(1,0,2)[:,-1,:], 'feat':x9}
             return result_dict
-            # return output.permute(1,0,2)
+            # preds = output.log_softmax(2)
+            # preds=torch.argmax(preds,dim=2, keepdim=True)
+            # preds = preds.transpose( 1, 0 ).contiguous().view(-1)
+            # return preds
 
     def group_matcher(self, coarse=False, prefix=''):
         if coarse:
