@@ -41,4 +41,4 @@ if __name__ == '__main__':
         'preds' : {0 : 'batch_size'},
         # 'preds_size':{ 0:'batch_size'}
     }
-    torch.onnx.export(model, example,f'{model_root_path}/model_best.onnx',export_params=True,verbose=False,do_constant_folding=True,input_names = ['input_tensors'],output_names = ['preds'],dynamic_axes=dynamic_axes)
+    torch.onnx.export(model, example,f'{model_root_path}/model_best.onnx',export_params=True,verbose=False,do_constant_folding=True,input_names = ['input_tensors'],output_names = ['preds'],dynamic_axes=dynamic_axes,opset_version=16)
