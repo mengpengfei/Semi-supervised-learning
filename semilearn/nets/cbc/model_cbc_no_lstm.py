@@ -8,6 +8,7 @@ from semilearn.nets.cbc.BackBoneNet import CBCNet_BACKBONE
 from semilearn.cbc_config import cbcconfig as config
 import torch.amp as amp
 import torch.utils.checkpoint as cp
+import os
 
 DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
@@ -145,8 +146,9 @@ class CBCNet_head(nn.Module):
             conv1=x10_2.reshape([b0,c0*h0,w0])
             ind11=ind1.unsqueeze(1).expand_as(conv1)
             conv1=conv1*ind11
-            conv1=conv1.permute(0, 2, 1)
             # conv1=conv1.permute(0, 2, 1)
+            # conv1=conv1.permute(0, 2, 1)
+            conv1=conv1.permute(2, 0, 1)
             conv=conv+conv1  #W,B,512
         else:
             # x100=x10.permute(0,1,3,2)
@@ -157,8 +159,8 @@ class CBCNet_head(nn.Module):
             # conv=x10_3.permute(2, 0, 1)
             x10_3 = x10.reshape([b1,c1*h1,w1]) #b c w
             # x10_3=self.linear0(x10_3) #b c w1
-            # conv=x10_3.permute(2, 0, 1)
-            conv=x10_3.permute(0, 2, 1)
+            conv=x10_3.permute(2, 0, 1) #w b c*h
+            # conv=x10_3.permute(0, 2, 1)
             # conv=self.linear(conv)
         output = self.linear(conv)
         return output
@@ -176,6 +178,31 @@ class CBCNet(nn.Module):
             nn.Dropout(p=dropout_ratio),
             CBCNet_head(config.timestamp,nclass)
         )
+        self.init_params()
+
+    def init_params(self):
+        cur_path = os.path.abspath(os.path.dirname(__file__))
+        pretrain_weights=os.path.join(cur_path,"214_0.96354_checkpoint.pth")
+        # pretrained_dict = torch.load(pretrain_weights,
+        #                              map_location={'cuda:0': 'cpu'})
+        pretrained_dict = torch.load(pretrain_weights,
+                                     map_location='cpu')
+        print('=> loading pretrained model {}'.format(pretrain_weights))
+
+        # keys_to_remove = [k for k in pretrained_dict.keys() if 'cbcnet_head.1.linear' in k]
+        # for k in keys_to_remove:
+        #     del pretrained_dict[k]
+
+        model_dict = self.state_dict()
+        # pretrained_dict = {k.replace('last_layer',
+        #                              'aux_head').replace('model.', ''): v
+        #                    for k, v in pretrained_dict.items()}
+        #print(set(model_dict) - set(pretrained_dict))
+        #print(set(pretrained_dict) - set(model_dict))
+        pretrained_dict = {k: v for k, v in pretrained_dict.items()
+                           if k in model_dict.keys()}
+        model_dict.update(pretrained_dict)
+        self.load_state_dict(model_dict)
     def forward(self, x):
         if config.fp16:
             with amp.autocast(config.auto_cast_device, dtype=torch.float16, cache_enabled=False):
@@ -187,30 +214,61 @@ class CBCNet(nn.Module):
                 else:
                     x9=self.features(x)
                     output=self.cbcnet_head(x9)
-            result_dict = {'logits':output[:,-1,:], 'feat':x}
+            result_dict = {'logits':output.permute(1,0,2)[:,-1,:], 'feat':x9}
             return result_dict
-            # return output.permute(1,0,2)
+            # preds = output.log_softmax(2)
+            # preds=torch.argmax(preds,dim=2, keepdim=True)
+            # preds = preds.transpose( 1, 0 ).contiguous().view(-1)
+            # return preds
         else:
             if config.check_points:
                 x9 = cp.checkpoint(self.features, x, use_reentrant=False)
                 output = cp.checkpoint(self.cbcnet_head,x9, use_reentrant=False)
             else:
                 x9=self.features(x)
-                output=self.cbcnet_head(x9)
-            result_dict = {'logits':output[:,-1,:], 'feat':x}
+                output=self.cbcnet_head(x9) #w,b,cnum
+            result_dict = {'logits':output.permute(1,0,2)[:,-1,:], 'feat':x9}
             return result_dict
-            # return output.permute(1,0,2)
+            # preds = output.log_softmax(2)
+            # preds=torch.argmax(preds,dim=2, keepdim=True)
+            # preds = preds.transpose( 1, 0 ).contiguous().view(-1)
+            # return preds
+
+    def group_matcher(self, coarse=False, prefix=''):
+        if coarse:
+            matcher = dict(
+                stem=r'^{}features\.stg1'.format(prefix),
+                blocks=r'^{}features\.stg2|^{}features\.stg3|^{}features\.stg4|^{}features\.stg5|^{}features\.stg6|^{}features\.stg7|^{}features\.stg8|^{}features\.stg9'.format(
+                    prefix, prefix, prefix, prefix, prefix, prefix, prefix, prefix),
+                head=r'^{}cbcnet_head'.format(prefix)
+            )
+        else:
+            matcher = dict(
+                stem=r'^{}features\.stg1'.format(prefix),
+                blocks=r'^{}features\.stg2_1|^{}features\.stg2_2|^{}features\.stg3|^{}features\.stg4|^{}features\.stg4_1|^{}features\.stg5|^{}features\.stg6|^{}features\.stg7|^{}features\.stg8|^{}features\.stg9'.format(
+                    prefix, prefix, prefix, prefix, prefix, prefix, prefix, prefix, prefix, prefix),
+                head=r'^{}cbcnet_head'.format(prefix)
+            )
+        return matcher
+
+    def no_weight_decay(self):
+        nwd = []
+        for n, _ in self.named_parameters():
+            if 'bn' in n or 'bias' in n:
+                nwd.append(n)
+        return nwd
 
 if __name__ == '__main__':
     # from torchvision import models
     # m=models.mobilenetv3.mobilenet_v3_large(pretrained=True)
     # print(m)
-    input=torch.rand([1,3,32,32])
+    input=torch.rand([6,3,32,32])
     b, c, h, w = input.size()
-    net=CBCNet(timestamp=math.ceil(w/8.0),nclass=37,dropout_ratio=0)
+    net=CBCNet(timestamp=1,nclass=4411,dropout_ratio=0)
     #
     # print(net)
     # net.eval()
+
     from torchvision.models.resnet import resnet18
     # from torchvision.models.mobilenet import MobileNetV3,mobilenet_v3_small
     # # # from torchvision.models.vgg import mobilenet_v3_large
@@ -230,7 +288,7 @@ if __name__ == '__main__':
     # )
     # print(mobilenetv3)
     # net=resnet18(num_classes=1000)
-    print(net.cbcnet_head.parameters())
+    # print(net.cbcnet_head.parameters())
     # net.eval();
     # out=net(input)
     # print(out)

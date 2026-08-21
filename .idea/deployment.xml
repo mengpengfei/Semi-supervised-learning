@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="root@192.168.0.12:22123" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="root@10.100.31.60:22260 password" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
       <paths name="0.12">
         <serverdata>
           <mappings>
             <mapping deploy="/Semi-supervised-learning" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="10.100.31.60_22260_ssl">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/code/Semi-supervised-learning" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@10.100.31.60:22260 password">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/data2/code/Semi-supervised-learning" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>

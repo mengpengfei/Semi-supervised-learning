@@ -116,9 +116,9 @@ def get_dataset(args, algorithm, dataset, num_labels, num_classes, data_dir='./d
 def get_data_loader(args,
                     dset,
                     batch_size=None,
-                    shuffle=False,
+                    shuffle=True,
                     num_workers=4,
-                    pin_memory=False,
+                    pin_memory=True,
                     data_sampler='RandomSampler',
                     num_epochs=None,
                     num_iters=None,
@@ -174,7 +174,7 @@ def get_data_loader(args,
 
         return DataLoader(dset, batch_size=batch_size, shuffle=False, num_workers=num_workers, collate_fn=collact_fn,
                           pin_memory=pin_memory, sampler=data_sampler(dset, num_replicas=num_replicas, rank=rank, num_samples=num_samples),
-                          generator=generator, drop_last=drop_last)
+                          generator=generator, drop_last=drop_last,prefetch_factor=8)
 
     elif isinstance(data_sampler, torch.utils.data.Sampler):
         return DataLoader(dset, batch_size=batch_size, shuffle=False, num_workers=num_workers,

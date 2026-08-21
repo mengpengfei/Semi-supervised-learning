@@ -156,7 +156,7 @@ class CoMatch(AlgorithmBase):
             feats = feats[:queue_ptr]
             probs = probs[:queue_ptr]
         self.queue_feats[self.queue_ptr:self.queue_ptr + length, :] = feats
-        self.queue_probs[self.queue_ptr:self.queue_ptr + length, :] = probs      
+        self.queue_probs[self.queue_ptr:self.queue_ptr + length, :] = probs
         self.queue_ptr = (self.queue_ptr + length) % self.queue_size
 
     def train_step(self, x_lb, y_lb, x_ulb_w, x_ulb_s_0, x_ulb_s_1):

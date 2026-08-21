@@ -3,7 +3,7 @@
   <component name="Black">
     <option name="sdkName" value="Remote 3.10 (sftp://root@192.168.0.13:22123/opt/conda/bin/python)" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="Remote 3.10 (sftp://root@192.168.0.12:22123/opt/conda/bin/python3.10)" project-jdk-type="Python SDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="Remote 3.10 (sftp://root@10.100.31.60:22260/opt/conda/bin/python)" project-jdk-type="Python SDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

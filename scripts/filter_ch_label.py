@@ -7,10 +7,14 @@ if __name__ == '__main__':
         lines = f.readlines()
 
     from semilearn.cbc_config import keys
-    lines1=[]
+    # lines1=[]
+    s_label=set()
     for l in lines:
         img_path, label = l.strip().split(" ")
-        if label.strip() in keys.alphabet:
-            lines1.append(l.strip())
-    with open("/data2/fssd2/damagou_error/train_tmp.txt", "w") as f:
-        f.write("\n".join(lines1))
+        if label.strip() not in keys.alphabet:
+            s_label.add(label.strip())
+    print(s_label)
+            # lines1.append(l.strip())
+    # with open("/data2/fssd2/damagou_error/train_tmp.txt", "w") as f:
+    #     f.write("\n".join(lines1))
+    # print(lines1)

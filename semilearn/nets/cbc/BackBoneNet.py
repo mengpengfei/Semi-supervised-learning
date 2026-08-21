@@ -181,6 +181,29 @@ class CBCNet_BACKBONE(nn.Module):
                                if k in model_dict.keys()}
             model_dict.update(pretrained_dict)
             self.load_state_dict(model_dict)
+
+    def group_matcher(self, coarse=False, prefix=''):
+        if coarse:
+            matcher = dict(
+                stem=r'^{}stg1'.format(prefix),
+                blocks=r'^{}stg2|^{}stg3|^{}stg4|^{}stg5|^{}stg6|^{}stg7|^{}stg8|^{}stg9'.format(
+                    prefix, prefix, prefix, prefix, prefix, prefix, prefix, prefix),
+            )
+        else:
+            matcher = dict(
+                stem=r'^{}stg1'.format(prefix),
+                blocks=r'^{}stg2_1|^{}stg2_2|^{}stg3|^{}stg4|^{}stg4_1|^{}stg5|^{}stg6|^{}stg7|^{}stg8|^{}stg9'.format(
+                    prefix, prefix, prefix, prefix, prefix, prefix, prefix, prefix, prefix, prefix),
+            )
+        return matcher
+
+    def no_weight_decay(self):
+        nwd = []
+        for n, _ in self.named_parameters():
+            if 'bn' in n or 'bias' in n:
+                nwd.append(n)
+        return nwd
+
     def forward(self, x):
         x1=self.stg1(x)
         x2_1=self.stg2_1(x1)

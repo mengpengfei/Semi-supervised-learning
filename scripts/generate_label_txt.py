@@ -29,6 +29,7 @@ def dirpath(root_dir,lpath,test_ratio):
 
 
 # nohup python -u train.py --c config/usb_cv/softmatch/softmatch_cbcnet1.yaml 2>&1 > logs/yidun1.log &
+# nohup python -u train.py --c config/classic_cv_imb/softmatch_abc/softmatch_cbcnet_abc.yaml 2>&1 > logs/yidunabc20260624.log &
 if __name__ == "__main__":
     base_labeled_data_root_dir='/data2/fssd2/jiyan/jiyan-big-origin-labeled-used/'
     unlabled_data_root_dir='/data2/fssd2/damagou_error/ch/unlabeled/'
@@ -78,18 +79,26 @@ if __name__ == "__main__":
         ,r"geetest-four-ch-little"
         ,r"error-back-2021-02-16"
         ,r"error-back-2021-03-30"
-        ,r"jiyanhanzi_36w\old_renamed"
-        ,r"jiyanhanzi_36w\renamed"
-              # ,r"jiyan-singile\jiyan-crop"
-              # ,r"jiyan-singile\jiyan-crop1"
-        ,r"new-2021-04-26"
+        ,r"jiyanhanzi_36w/old_renamed"
+        ,r"jiyanhanzi_36w/renamed"
+        ,r"jiyan-singile/jiyan-crop"
+        ,r"jiyan-singile/jiyan-crop1"
+
         ,r"fist_500_ul_pics"
+        ,r"fist_500_ul_pics"
+        ,r"txt_pred_20260516"
+        ,r"txt_pred_20260516"
         ,r"yidun_ch_click20260606_cropped_5000"
+        ,r"yidun_ch_click20260606_cropped_5000"
+        ,r"geetest4-ch-big-20260804_cropped"
+        ,r"geetest4-ch-big-20260804_cropped"
+
               ]
 
     base_unlabled_str=[
         r"yidun_ch_click20260322_label_croped",
-        r"yidun_ch_click20260606_cropped_0"
+        r"yidun_ch_click20260606_cropped_0",
+        r"geest4-ch-20260804_cropped"
     ]
 
 
@@ -100,17 +109,21 @@ if __name__ == "__main__":
     split_char='_'
     for img_path in base_labeld_train_filelist:
         label=Path(img_path).stem.split(split_char)[0]
+        if len(label.strip())>1:
+            continue
         labeled_lines.append(f"{str(img_path)} {label}\n")
 
     val_labeled_lines=[]
     split_char='_'
     for img_path in base_labeld_test_filelist:
         label=Path(img_path).stem.split(split_char)[0]
+        if len(label.strip())>1:
+            continue
         val_labeled_lines.append(f"{str(img_path)} {label}\n")
 
     unlabeled_lines=[]
     for img_path in unlabeld_train_filelist:
-        label=Path(img_path).stem.split(split_char)[0]
+        # label=Path(img_path).stem.split(split_char)[0]
         unlabeled_lines.append(f"{str(img_path)}\n")
 
     random.shuffle(labeled_lines)

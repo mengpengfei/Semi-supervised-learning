@@ -17,7 +17,7 @@ train_bs=16
 val_bs=16
 show_interval=1
 save_interval_epoches=1
-dropout_ratio=0.00
+dropout_ratio=0.5
 # kernel_size=(1,math.ceil(config.input_w/8/timestamp))   real_timestamp=math.ceil(config.input_w/8.0/kernel_size[1])
 timestamp=1 #math.ceil(input_w/8.0)
 alphabet=keys.alphabet

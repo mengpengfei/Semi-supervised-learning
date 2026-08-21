@@ -1,4 +1,6 @@
-FROM docker.1ms.run/pytorch/pytorch:1.13.1-cuda11.6-cudnn8-devel
+#FROM docker.1ms.run/pytorch/pytorch:1.13.1-cuda11.6-cudnn8-devel
+FROM dockerproxy.net/pytorch/pytorch:2.3.1-cuda12.1-cudnn8-devel
+
 
 RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && \
     sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list || true && \
